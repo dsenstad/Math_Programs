@@ -30,6 +30,7 @@ coefficients = []
 while len(coefficients) < N:
     coefficients.append(calc_coefficients(len(coefficients) + 1))
 
+"""
 def fourier_approx(x, coeffs):
     total = 0.0
     for n, c_n in enumerate(coeffs, start=1):
@@ -60,3 +61,4 @@ plt.title("Original Function vs Fourier Sine Series Approximation")
 plt.legend()
 plt.grid(True)
 plt.show()
+"""
