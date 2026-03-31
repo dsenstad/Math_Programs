@@ -7,7 +7,7 @@ Author: David Senstad
 
 As we all know, the set of functions f_n = sin(nx) forms an orthogonal set of functions on [0,π]. This program lets you define any
 function you want under def f_x and then calculate its Fourier sine series coefficients c_n up to N terms. It will then graph the original
-function with the approximation on top.
+function with the approximation on top and tell you the mean-square error of the approximation.
 """
 
 # Number of terms you want the function to be approximated with
@@ -21,16 +21,16 @@ def f_x(x):
 def integrand(x, n):
     return f_x(x) * math.sin(n * x)
 
-# Uses quad to numerically approximate the Fourier sine series coefficients c_n
+# Uses quad to numerically approximate the Fourier sine series coefficients c_n and returns an array of the coefficients
 def calc_coefficients(n):
-    return (2/math.pi) * quad(integrand, 0, math.pi, args=n)[0]
+    coefficients = []
+    i = 1
+    while i <= n:
+        coefficients.append((2/math.pi) * quad(integrand, 0, math.pi, args=i)[0])
+        i += 1
+    return coefficients
 
-#Creates list of Fourier sine series coefficients and calculates them starting at c_1 up to c_N
-coefficients = []
-while len(coefficients) < N:
-    coefficients.append(calc_coefficients(len(coefficients) + 1))
-
-"""
+# Given an x value, calculate the Fourier sine series at x given a list of coefficients
 def fourier_approx(x, coeffs):
     total = 0.0
     for n, c_n in enumerate(coeffs, start=1):
@@ -44,12 +44,12 @@ def mse_integrand(x, coeffs):
 def mean_square_error(coeffs):
     return quad(mse_integrand, 0, np.pi, args=(coeffs,))[0]
 
-print(f"Mean-square error in the Fourier sine series for {N} terms: {mean_square_error(coefficients)}")
+print(f"Mean-square error in the Fourier sine series for {N} terms: {mean_square_error(calc_coefficients(N))}")
 
 #Create x-values on our interval
 x_vals = np.linspace(0, math.pi, 500)
 y_original = f_x(x_vals)
-y_approx = fourier_approx(x_vals, coefficients)
+y_approx = fourier_approx(x_vals, calc_coefficients(N))
 
 #Plot both
 plt.figure(figsize=(8, 5))
@@ -61,4 +61,3 @@ plt.title("Original Function vs Fourier Sine Series Approximation")
 plt.legend()
 plt.grid(True)
 plt.show()
-"""
